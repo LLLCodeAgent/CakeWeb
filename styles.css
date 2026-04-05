@@ -10,6 +10,18 @@
 
 * { box-sizing: border-box; }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 body {
   margin: 0;
   font-family: Inter, system-ui, -apple-system, sans-serif;
@@ -213,6 +225,11 @@ body {
   height: 180px;
   object-fit: cover;
   background: #f3f4f6;
+}
+
+.card img.is-fallback {
+  object-fit: contain;
+  padding: 18px;
 }
 
 .card-body { padding: 10px; }

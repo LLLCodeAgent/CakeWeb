@@ -1,3 +1,16 @@
+const CAKE_IMAGES = [
+  'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=900&q=80',
+  'https://images.unsplash.com/photo-1621303837174-89787a7d4729?auto=format&fit=crop&w=900&q=80',
+  'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?auto=format&fit=crop&w=900&q=80',
+  'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?auto=format&fit=crop&w=900&q=80',
+  'https://images.unsplash.com/photo-1627308595229-7830a5c91f9f?auto=format&fit=crop&w=900&q=80',
+  'https://images.unsplash.com/photo-1535141192574-5d4897c12636?auto=format&fit=crop&w=900&q=80',
+  'https://images.unsplash.com/photo-1622621746668-59fb299bc4d7?auto=format&fit=crop&w=900&q=80',
+  'https://images.unsplash.com/photo-1559620192-032c4bc4674e?auto=format&fit=crop&w=900&q=80',
+  'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=80',
+  'https://images.unsplash.com/photo-1571115177098-24ec42ed204d?auto=format&fit=crop&w=900&q=80'
+];
+
 const PRODUCTS = [
   { name: 'Chocolate Truffle Delicious Cake Half kg Eggless', price: 549, oldPrice: 699, rating: 4.9, reviews: '3.1K', flavour: 'Chocolate', type: 'Cake', occasion: 'Birthday', eggless: true },
   { name: 'Enchanting Orchid Bouquet & Truffle Cake', price: 775, oldPrice: 925, rating: 5.0, reviews: '406', flavour: 'Chocolate', type: 'Combo', occasion: 'Anniversary', eggless: true },
@@ -19,7 +32,7 @@ const PRODUCTS = [
   { name: 'Red Velvet Cake Half Kg Eggless', price: 699, oldPrice: 849, rating: 4.8, reviews: '241', flavour: 'Red Velvet', type: 'Cake', occasion: 'Occasions', eggless: true },
   { name: 'Belgian Chocolate Cake Half Kg Eggless', price: 799, oldPrice: 949, rating: 4.9, reviews: '353', flavour: 'Chocolate', type: 'Cake', occasion: 'Birthday', eggless: true },
   { name: 'Vanilla Fresh Cream Cake Half Kg', price: 499, oldPrice: 649, rating: 4.8, reviews: '214', flavour: 'Vanilla', type: 'Cake', occasion: 'Birthday', eggless: false }
-].map((item, index) => ({ ...item, image: `https://picsum.photos/seed/jaipur-prod-${index + 1}/700/500` }));
+].map((item, index) => ({ ...item, image: CAKE_IMAGES[index % CAKE_IMAGES.length] }));
 
 const state = {
   search: '',
@@ -65,7 +78,7 @@ function createChips(root, values, groupKey) {
 function productCard(product) {
   const discount = Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100);
   return `<article class="card">
-      <img src="${product.image}" alt="${product.name}" loading="lazy" onerror="this.style.opacity='0.3'" />
+      <img src="${product.image}" alt="${product.name}" loading="lazy" />
       <div class="card-body">
         <h3>${product.name}</h3>
         <div class="price">
@@ -213,6 +226,18 @@ function init() {
   refs.typeFilters.addEventListener('click', handleChipClick);
 
   refs.clearFiltersBtn.addEventListener('click', resetFilters);
+
+  refs.productGrid.addEventListener(
+    'error',
+    (event) => {
+      const img = event.target;
+      if (!(img instanceof HTMLImageElement) || img.classList.contains('is-fallback')) return;
+      img.classList.add('is-fallback');
+      img.src =
+        'data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"700\" height=\"500\"><rect width=\"100%\" height=\"100%\" fill=\"%23f3f4f6\"/><text x=\"50%\" y=\"50%\" text-anchor=\"middle\" dominant-baseline=\"middle\" fill=\"%236b7280\" font-family=\"Arial\" font-size=\"24\">Image unavailable</text></svg>';
+    },
+    true
+  );
 
   render();
 }
