@@ -64,6 +64,7 @@ const refs = {
 };
 
 const formatter = new Intl.NumberFormat('en-IN');
+const { applyFilters, applySort, sanitizePriceRange: clampPriceRange } = window.Catalog;
 
 function uniqValues(key) {
   return [...new Set(PRODUCTS.map((item) => item[key]))].sort();
@@ -91,31 +92,6 @@ function productCard(product) {
     </article>`;
 }
 
-function applyFilters(products) {
-  return products.filter((item) => {
-    if (item.price < state.minPrice || item.price > state.maxPrice) return false;
-    if (state.egglessOnly && !item.eggless) return false;
-
-    if (state.search) {
-      const hay = `${item.name} ${item.flavour} ${item.occasion}`.toLowerCase();
-      if (!hay.includes(state.search.toLowerCase())) return false;
-    }
-
-    if (state.occasion.size && !state.occasion.has(item.occasion)) return false;
-    if (state.flavour.size && !state.flavour.has(item.flavour)) return false;
-    if (state.type.size && !state.type.has(item.type)) return false;
-
-    return true;
-  });
-}
-
-function applySort(items) {
-  if (state.sort === 'low') return items.sort((a, b) => a.price - b.price);
-  if (state.sort === 'high') return items.sort((a, b) => b.price - a.price);
-  if (state.sort === 'rating') return items.sort((a, b) => b.rating - a.rating);
-  return items;
-}
-
 function renderActiveFilters() {
   const pills = [];
   if (state.search) pills.push(`Search: ${state.search}`);
@@ -131,7 +107,7 @@ function render() {
   refs.totalCount.textContent = PRODUCTS.length;
   refs.priceReadout.textContent = `₹ ${formatter.format(state.minPrice)} to ₹ ${formatter.format(state.maxPrice)}${state.maxPrice >= 3500 ? '+' : ''}`;
 
-  const filtered = applySort(applyFilters([...PRODUCTS]));
+  const filtered = applySort(applyFilters(PRODUCTS, state), state.sort);
   refs.visibleCount.textContent = filtered.length;
   refs.emptyState.hidden = filtered.length !== 0;
   refs.productGrid.innerHTML = filtered.map(productCard).join('');
@@ -176,13 +152,11 @@ function handleChipClick(event) {
   render();
 }
 
-function sanitizePriceRange() {
-  let min = Number(refs.minPriceInput.value || 200);
-  let max = Number(refs.maxPriceInput.value || 3500);
-
-  if (min < 200) min = 200;
-  if (max > 3500) max = 3500;
-  if (min > max) [min, max] = [max, min];
+function syncPriceRangeFromInputs() {
+  const { min, max } = clampPriceRange(
+    refs.minPriceInput.value,
+    refs.maxPriceInput.value
+  );
 
   state.minPrice = min;
   state.maxPrice = max;
@@ -207,12 +181,12 @@ function init() {
   });
 
   refs.minPriceInput.addEventListener('change', () => {
-    sanitizePriceRange();
+    syncPriceRangeFromInputs();
     render();
   });
 
   refs.maxPriceInput.addEventListener('change', () => {
-    sanitizePriceRange();
+    syncPriceRangeFromInputs();
     render();
   });
 
