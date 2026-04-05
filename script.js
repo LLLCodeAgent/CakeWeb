@@ -1,125 +1,63 @@
 const products = [
-  {
-    name: 'Chocolate Truffle Delicious Cake Half kg Eggless',
-    price: 549,
-    oldPrice: 699,
-    rating: 4.9,
-    reviews: '3.1K',
-    image:
-      'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=900&q=80',
-  },
-  {
-    name: 'Enchanting Orchid Bouquet & Truffle Cake',
-    price: 775,
-    oldPrice: 925,
-    rating: 5.0,
-    reviews: '361',
-    image:
-      'https://images.unsplash.com/photo-1621303837174-89787a7d4729?auto=format&fit=crop&w=900&q=80',
-  },
-  {
-    name: 'Ruby Rose N Truffle Cake Combo',
-    price: 1299,
-    oldPrice: 1499,
-    rating: 4.8,
-    reviews: '247',
-    image:
-      'https://images.unsplash.com/photo-1626803775151-61d756612f97?auto=format&fit=crop&w=900&q=80',
-  },
-  {
-    name: 'Velvety Chocolate Eggless Truffle Cake',
-    price: 575,
-    oldPrice: 725,
-    rating: 5.0,
-    reviews: '246',
-    image:
-      'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?auto=format&fit=crop&w=900&q=80',
-  },
-  {
-    name: 'Fruit Overload Cake Half Kg Eggless',
-    price: 699,
-    oldPrice: 849,
-    rating: 4.9,
-    reviews: '1.5K',
-    image:
-      'https://images.unsplash.com/photo-1535141192574-5d4897c12636?auto=format&fit=crop&w=900&q=80',
-  },
-  {
-    name: 'Butterscotch Cake Half kg Eggless',
-    price: 549,
-    oldPrice: 699,
-    rating: 4.9,
-    reviews: '1.0K',
-    image:
-      'https://images.unsplash.com/photo-1627308595229-7830a5c91f9f?auto=format&fit=crop&w=900&q=80',
-  },
-  {
-    name: 'Black Forest Cake Half kg Eggless',
-    price: 549,
-    oldPrice: 699,
-    rating: 4.9,
-    reviews: '3.1K',
-    image:
-      'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?auto=format&fit=crop&w=900&q=80',
-  },
-  {
-    name: 'Chocolate Caramel Fudge Cake Half Kg Eggless',
-    price: 525,
-    oldPrice: 675,
-    rating: 5.0,
-    reviews: '970',
-    image:
-      'https://images.unsplash.com/photo-1622621746668-59fb299bc4d7?auto=format&fit=crop&w=900&q=80',
-  },
-];
+  ['Chocolate Truffle Delicious Cake Half kg Eggless', 549, 699, 4.9, '3.1K'],
+  ['Enchanting Orchid Bouquet & Truffle Cake', 775, 925, 5.0, '406'],
+  ['Fruit Overload Cake Half Kg Eggless', 699, 849, 4.9, '1.5K'],
+  ['Angelic Rose Bouquet n Truffle Birthday Bliss', 749, 899, 5.0, '176'],
+  ['Velvety Chocolate Eggless Truffle Cake', 575, 725, 5.0, '263'],
+  ['Rosy Blooms & Choco Cake Combo', 1799, 2049, 4.8, '106'],
+  ['Rainbow Delight Eggless Pineapple Birthday Cake', 749, 899, 4.8, '91'],
+  ['Birthday Blooms & Truffle Delight', 1775, 2025, 5.0, '199'],
+  ['Chocolate Caramel Fudge Cake Half Kg Eggless', 525, 675, 5.0, '992'],
+  ['Butterscotch Cake Half kg Eggless', 549, 699, 4.9, '1.0K'],
+  ['Truffle Bento Cake N Blue Orchid', 949, 1099, 4.8, '120'],
+  ['Black Forest Cake Half kg Eggless', 549, 699, 4.9, '3.1K'],
+  ['Serenade of Roses and Truffle Symphony', 699, 849, 5.0, '166'],
+  ['Decorated Chocolate Truffle Cake Half Kg Eggless', 675, 825, 4.9, '1.6K'],
+  ['Dreamy Violet Whispers Orchids Bouquet & Black Forest Combo', 949, 1099, 5.0, '155'],
+  ['Truffle Treat Bento Eggless Cake', 375, 475, 4.7, '80'],
+  ['Pineapple Cake Half kg Eggless', 525, 675, 4.9, '2.0K'],
+  ['Ruby Rose N Truffle Cake Combo', 1299, 1499, 4.8, '232'],
+  ['Rose Paradise Chocolate Cake Eggless Half Kg', 699, 849, 5.0, '1.1K'],
+  ['Luxe Love Orchids Bouquet & Truffle Cake', 1875, 2125, 4.9, '211'],
+  ['Timeless Love Red Roses Bouquet & Chocolate Cake', 1325, 1525, 4.9, '558'],
+  ['Golden Delight Rasmalai Eggless Cake', 749, 899, 4.8, '90'],
+  ['Butterscotch Crunch Cake- Half Kg', 625, 775, 4.7, '74'],
+  ['Chocolate Cream Cake Half kg Eggless', 525, 675, 4.9, '1.5K']
+].map(([name, price, oldPrice, rating, reviews], i) => ({
+  name,
+  price,
+  oldPrice,
+  rating,
+  reviews,
+  image: `https://picsum.photos/seed/jaipur-cake-${i + 1}/600/420`
+}));
 
 const grid = document.getElementById('productGrid');
 const sortSelect = document.getElementById('sortSelect');
 
-function cardTemplate(product) {
-  const off = Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100);
-
-  return `
-    <article class="card">
-      <img src="${product.image}" alt="${product.name}" loading="lazy" />
+function card(p) {
+  const off = Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100);
+  return `<article class="card">
+      <img src="${p.image}" alt="${p.name}" loading="lazy" />
       <div class="card-body">
-        <h3>${product.name}</h3>
-        <div class="price-row">
-          <span class="new-price">₹ ${product.price}</span>
-          <span class="old-price">₹ ${product.oldPrice}</span>
-          <span class="off">${off}% OFF</span>
-        </div>
-        <div class="small-meta">★ ${product.rating} · ${product.reviews} reviews</div>
+        <h3>${p.name}</h3>
+        <div class="price"><span class="new">₹ ${p.price}</span><span class="old">₹ ${p.oldPrice}</span><span class="off">${off}% OFF</span></div>
+        <div class="meta">★ ${p.rating} · ${p.reviews} reviews</div>
       </div>
     </article>`;
 }
 
-function render(items) {
-  grid.innerHTML = items.map(cardTemplate).join('');
+function render(list) {
+  grid.innerHTML = list.map(card).join('');
 }
 
-function sortProducts(mode) {
+function sortAndRender(type) {
   const copy = [...products];
-
-  switch (mode) {
-    case 'low':
-      copy.sort((a, b) => a.price - b.price);
-      break;
-    case 'high':
-      copy.sort((a, b) => b.price - a.price);
-      break;
-    case 'rating':
-      copy.sort((a, b) => b.rating - a.rating);
-      break;
-    default:
-      break;
-  }
-
+  if (type === 'low') copy.sort((a, b) => a.price - b.price);
+  if (type === 'high') copy.sort((a, b) => b.price - a.price);
+  if (type === 'rating') copy.sort((a, b) => b.rating - a.rating);
   render(copy);
 }
 
-sortSelect.addEventListener('change', (event) => {
-  sortProducts(event.target.value);
-});
-
-sortProducts('recommended');
+sortSelect.addEventListener('change', (e) => sortAndRender(e.target.value));
+sortAndRender('recommended');
