@@ -4,77 +4,127 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Order Cake In Jaipur Online | 60 Minutes Delivery - FNP</title>
+    <meta
+      name="description"
+      content="Order cakes online in Jaipur with same-day delivery, midnight delivery options, and a wide range of eggless, birthday and premium cakes."
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <header class="header">
+    <a class="skip-link" href="#productsSection">Skip to products</a>
+
+    <header class="header" role="banner">
       <div class="container top-row">
-        <div class="logo">fnp</div>
-        <div class="search"><input placeholder="Search cakes, flowers, gifts etc." /></div>
-        <div class="actions"><span>INR</span><span>Cart</span><span>Hi Guest</span></div>
+        <div class="logo" aria-label="FNP">fnp</div>
+        <label class="search" aria-label="Search products">
+          <input id="searchInput" type="search" placeholder="Search cakes, flowers, gifts etc." />
+        </label>
+        <div class="actions" aria-label="User actions">
+          <button class="ghost-btn" type="button">INR</button>
+          <button class="ghost-btn" type="button">Cart</button>
+          <button class="ghost-btn" type="button">Hi Guest</button>
+        </div>
       </div>
-      <div class="container category-row">
-        <a>Birthday</a><a>Occasions</a><a>Anniversary</a><a>Flowers</a><a>Cakes</a><a>Personalised</a><a>Plants</a><a>Chocolates</a><a>International</a>
-      </div>
+
+      <nav class="container category-row" aria-label="Primary">
+        <a href="#">Birthday</a>
+        <a href="#">Occasions</a>
+        <a href="#">Anniversary</a>
+        <a href="#">Flowers</a>
+        <a href="#">Cakes</a>
+        <a href="#">Personalised</a>
+        <a href="#">Plants</a>
+        <a href="#">Chocolates</a>
+        <a href="#">International</a>
+      </nav>
     </header>
 
     <main class="container page">
       <p class="breadcrumbs">Home / Online Cake Delivery In Jaipur</p>
-      <div class="layout">
-        <aside class="sidebar">
-          <h3>Filter</h3>
+
+      <section class="listing-shell" id="productsSection" aria-label="Cake listing">
+        <aside class="sidebar" aria-label="Filters">
+          <div class="section-head">
+            <h2>Filter</h2>
+            <button id="clearFiltersBtn" class="link-btn" type="button">Clear all</button>
+          </div>
+
           <div class="filter-block">
             <div class="filter-head">Price</div>
-            <div class="range">₹ 200 <span>to</span> ₹ 3500+</div>
-            <div class="range-inputs"><input placeholder="Minimum" /><input placeholder="Maximum" /></div>
+            <div class="range-readout" id="priceReadout">₹ 200 to ₹ 3,500+</div>
+            <div class="range-grid">
+              <input id="minPriceInput" type="number" min="200" step="25" value="200" />
+              <input id="maxPriceInput" type="number" min="200" step="25" value="3500" />
+            </div>
           </div>
-          <div class="filter-item">Flavour</div><div class="filter-item">Type</div><div class="filter-item">Weight</div><div class="filter-item">Cake Type</div>
-          <div class="filter-item">Horoscope</div><div class="filter-item">Gift Type</div><div class="filter-item">Color</div><div class="filter-item">Flower Type</div><div class="filter-item">Shape</div>
+
+          <div class="filter-block">
+            <div class="filter-head">Occasion</div>
+            <div id="occasionFilters" class="chip-wrap"></div>
+          </div>
+
+          <div class="filter-block">
+            <div class="filter-head">Flavour</div>
+            <div id="flavourFilters" class="chip-wrap"></div>
+          </div>
+
+          <div class="filter-block">
+            <div class="filter-head">Type</div>
+            <div id="typeFilters" class="chip-wrap"></div>
+          </div>
+
+          <label class="check-row">
+            <input id="egglessToggle" type="checkbox" /> Eggless only
+          </label>
         </aside>
 
-        <section class="listing">
-          <div class="title-row">
+        <section class="listing" aria-live="polite">
+          <header class="title-row">
             <h1>Cake Delivery In Jaipur</h1>
-            <div class="stats">40 of 931 Gifts | <span>★ 4.8</span> 4083 Reviews</div>
+            <p class="stats"><span id="visibleCount">0</span> of <span id="totalCount">0</span> Gifts | <span>★ 4.8</span> 4083 Reviews</p>
+          </header>
+
+          <div class="controls-row">
+            <label class="sort-box">Sort by:
+              <select id="sortSelect" aria-label="Sort products">
+                <option value="recommended">Recommended</option>
+                <option value="low">Price: Low to High</option>
+                <option value="high">Price: High to Low</option>
+                <option value="rating">Top Rated</option>
+              </select>
+            </label>
+            <div id="activeFilters" class="active-filters" aria-label="Active filters"></div>
           </div>
-          <div class="sort-row"><label>Sort by :</label><select id="sortSelect"><option value="recommended">Recommended</option><option value="low">Price: Low to High</option><option value="high">Price: High to Low</option><option value="rating">Top Rated</option></select></div>
+
+          <div id="emptyState" class="empty-state" hidden>
+            <h3>No matching products</h3>
+            <p>Try changing filters or search keyword.</p>
+          </div>
+
           <div id="productGrid" class="product-grid"></div>
         </section>
-      </div>
+      </section>
 
-      <section class="text-wrap">
+      <section class="content-card">
         <h2>FAQs Related to Cake Delivery in Jaipur</h2>
-        <div class="qa"><h4>Q:-Which is the best cake shop near me in Jaipur?</h4><p>Ans: FNP has an amazing cake shop in Jaipur. The cake shop is known as fnpCakes 'n' More and it delivers fresh and yummy cakes at your doorsteps within 2hrs.</p></div>
-        <div class="qa"><h4>Q:- Is Same Day Cake delivery possible in Jaipur ?</h4><p>Ans:-Yes, FNP provides same day cake delivery in Jaipur. You can avail of this facility by placing an order before 4:00 PM.</p></div>
-        <div class="qa"><h4>Q:-Do FNP provide late night cake delivery in Jaipur?</h4><p>Ans:-Yes, We provide late night cake delivery services in Jaipur by placing the order before 8:00 pm.</p></div>
-        <div class="qa"><h4>Q:-How to send cakes to Jaipur, India from Abroad?</h4><p>Ans:-You can send cakes to Jaipur from abroad with our online portal. We deliver from the UK, Malaysia, Canada, USA and 70+ countries.</p></div>
+        <details open><summary>Which is the best cake shop near me in Jaipur?</summary><p>FNP has cake stores across Jaipur and offers fast doorstep delivery.</p></details>
+        <details><summary>Is same-day cake delivery possible in Jaipur?</summary><p>Yes, place your order before the daily cut-off to get same-day delivery slots.</p></details>
+        <details><summary>Do you provide late-night cake delivery in Jaipur?</summary><p>Yes, late-evening and midnight slots are available for selected localities.</p></details>
       </section>
 
-      <section class="text-wrap">
+      <section class="content-card">
         <h2>Find Cakes Store Near You In Jaipur</h2>
-        <div class="stores">
-          <p><strong>FNP Store C-Scheme</strong><br />F-5 Jamnalal Bajaj Marg C-Scheme, Jaipur, Rajasthan 302001</p>
-          <p><strong>FNP Store Malviya Nagar</strong><br />13/E-54, Girdhar Marg, Opp. Reliance Fresh, Malviya Nagar, Jaipur, Rajasthan 302017</p>
-          <p><strong>FNP Store Shyam Nagar</strong><br />F 1 Shyam path, Shyam nagar New sanganer road, Jaipur, Rajasthan 302019</p>
-        </div>
-      </section>
-
-      <section class="text-wrap">
-        <h2>Do you want to deliver cakes to a particular location in Jaipur but don’t know how?</h2>
-        <p>Well, we have the perfect answer for you, we will deliver cakes to Jaipur for you to any location of your choice.</p>
-        <ul class="areas">
-          <li>Adarsh Nagar</li><li>Agra Road</li><li>Ajmer Road</li><li>Ajmeri Gate</li><li>Ambabari</li><li>Amer Road</li><li>Bais Godam</li><li>Bajaj Nagar</li><li>Bani Park</li><li>Bapu Bazaar</li><li>Bapu Nagar</li><li>Barkat Nagar</li><li>Bhawani Singh Road</li><li>Biseswarji</li><li>Brahmapuri</li><li>Chandpol</li><li>Civil Lines</li><li>Durgapura</li><li>Gangori Bazar</li><li>Ghat Darwaza</li><li>Gopalpura</li><li>Indira Bazar</li><li>Jagatpura</li><li>Jalupura</li>
+        <ul class="store-list">
+          <li><strong>FNP Store C-Scheme:</strong> F-5 Jamnalal Bajaj Marg C-Scheme, Jaipur 302001</li>
+          <li><strong>FNP Store Malviya Nagar:</strong> 13/E-54, Girdhar Marg, Malviya Nagar, Jaipur 302017</li>
+          <li><strong>FNP Store Shyam Nagar:</strong> F 1 Shyam Path, New Sanganer Road, Jaipur 302019</li>
         </ul>
-        <button class="view-all">View All Delivery Areas</button>
-      </section>
-
-      <section class="feature-strip">
-        <div><h4>Worldwide Delivery</h4><p>We deliver gifts to over 70 countries</p></div>
-        <div><h4>100% Safe & Secure Payments</h4><p>Pay using secure payment methods</p></div>
-        <div><h4>Dedicated Help Center</h4><p>Call us +91 9212422000 | 8:00AM-10:30PM</p></div>
       </section>
     </main>
 
