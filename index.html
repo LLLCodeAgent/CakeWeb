@@ -27,7 +27,7 @@
         </label>
         <div class="actions" aria-label="User actions">
           <button class="ghost-btn" type="button">INR</button>
-          <button class="ghost-btn" type="button">Cart</button>
+          <button class="ghost-btn" type="button">Cart (<span id="headerCartCount">0</span>)</button>
           <button class="ghost-btn" type="button">Hi Guest</button>
         </div>
       </div>
@@ -84,6 +84,13 @@
           <label class="check-row">
             <input id="egglessToggle" type="checkbox" /> Eggless only
           </label>
+
+          <section class="cart-panel" aria-label="Cart summary">
+            <h3>Your Cart</h3>
+            <p><span id="cartCount">0</span> item(s)</p>
+            <p>Subtotal: <strong id="cartSubtotal">₹ 0</strong></p>
+            <button id="checkoutBtn" class="checkout-btn" type="button">Proceed to Checkout</button>
+          </section>
         </aside>
 
         <section class="listing" aria-live="polite">

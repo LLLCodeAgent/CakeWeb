@@ -32,7 +32,11 @@ const PRODUCTS = [
   { name: 'Red Velvet Cake Half Kg Eggless', price: 699, oldPrice: 849, rating: 4.8, reviews: '241', flavour: 'Red Velvet', type: 'Cake', occasion: 'Occasions', eggless: true },
   { name: 'Belgian Chocolate Cake Half Kg Eggless', price: 799, oldPrice: 949, rating: 4.9, reviews: '353', flavour: 'Chocolate', type: 'Cake', occasion: 'Birthday', eggless: true },
   { name: 'Vanilla Fresh Cream Cake Half Kg', price: 499, oldPrice: 649, rating: 4.8, reviews: '214', flavour: 'Vanilla', type: 'Cake', occasion: 'Birthday', eggless: false }
-].map((item, index) => ({ ...item, image: CAKE_IMAGES[index % CAKE_IMAGES.length] }));
+].map((item, index) => ({
+  id: `cake-${index + 1}`,
+  ...item,
+  image: CAKE_IMAGES[index % CAKE_IMAGES.length]
+}));
 
 const state = {
   search: '',
@@ -42,7 +46,8 @@ const state = {
   occasion: new Set(),
   flavour: new Set(),
   type: new Set(),
-  sort: 'recommended'
+  sort: 'recommended',
+  cart: new Map()
 };
 
 const refs = {
@@ -60,7 +65,11 @@ const refs = {
   typeFilters: document.getElementById('typeFilters'),
   activeFilters: document.getElementById('activeFilters'),
   clearFiltersBtn: document.getElementById('clearFiltersBtn'),
-  emptyState: document.getElementById('emptyState')
+  emptyState: document.getElementById('emptyState'),
+  cartCount: document.getElementById('cartCount'),
+  cartSubtotal: document.getElementById('cartSubtotal'),
+  headerCartCount: document.getElementById('headerCartCount'),
+  checkoutBtn: document.getElementById('checkoutBtn')
 };
 
 const formatter = new Intl.NumberFormat('en-IN');
@@ -78,6 +87,16 @@ function createChips(root, values, groupKey) {
 
 function productCard(product) {
   const discount = Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100);
+  const qty = state.cart.get(product.id) || 0;
+  const actions =
+    qty === 0
+      ? `<button class="add-btn" type="button" data-action="add" data-id="${product.id}">Add to Cart</button>`
+      : `<div class="qty-wrap">
+          <button class="qty-btn" type="button" data-action="dec" data-id="${product.id}">−</button>
+          <span class="qty-text">${qty}</span>
+          <button class="qty-btn" type="button" data-action="inc" data-id="${product.id}">+</button>
+        </div>`;
+
   return `<article class="card">
       <img src="${product.image}" alt="${product.name}" loading="lazy" />
       <div class="card-body">
@@ -88,6 +107,7 @@ function productCard(product) {
           <span class="off">${discount}% OFF</span>
         </div>
         <div class="meta">★ ${product.rating.toFixed(1)} · ${product.reviews} reviews</div>
+        <div class="card-actions">${actions}</div>
       </div>
     </article>`;
 }
@@ -112,6 +132,21 @@ function render() {
   refs.emptyState.hidden = filtered.length !== 0;
   refs.productGrid.innerHTML = filtered.map(productCard).join('');
   renderActiveFilters();
+  renderCartSummary();
+}
+
+function renderCartSummary() {
+  let count = 0;
+  let subtotal = 0;
+  for (const [id, qty] of state.cart) {
+    const product = PRODUCTS.find((item) => item.id === id);
+    if (!product) continue;
+    count += qty;
+    subtotal += qty * product.price;
+  }
+  refs.cartCount.textContent = String(count);
+  refs.headerCartCount.textContent = String(count);
+  refs.cartSubtotal.textContent = `₹ ${formatter.format(subtotal)}`;
 }
 
 function resetFilters() {
@@ -147,6 +182,22 @@ function handleChipClick(event) {
   } else {
     bucket.add(value);
     button.classList.add('active');
+  }
+
+  render();
+}
+
+function handleCartActions(event) {
+  const target = event.target.closest('button[data-action]');
+  if (!target) return;
+
+  const { action, id } = target.dataset;
+  const qty = state.cart.get(id) || 0;
+
+  if (action === 'add' || action === 'inc') state.cart.set(id, qty + 1);
+  if (action === 'dec') {
+    if (qty <= 1) state.cart.delete(id);
+    else state.cart.set(id, qty - 1);
   }
 
   render();
@@ -200,6 +251,15 @@ function init() {
   refs.typeFilters.addEventListener('click', handleChipClick);
 
   refs.clearFiltersBtn.addEventListener('click', resetFilters);
+  refs.productGrid.addEventListener('click', handleCartActions);
+  refs.checkoutBtn.addEventListener('click', () => {
+    const totalItems = [...state.cart.values()].reduce((sum, qty) => sum + qty, 0);
+    if (!totalItems) {
+      window.alert('Your cart is empty. Add some cakes first!');
+      return;
+    }
+    window.alert(`Great choice! Proceeding with ${totalItems} item(s) in cart.`);
+  });
 
   refs.productGrid.addEventListener(
     'error',
